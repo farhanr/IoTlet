@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "297834423356",
+    "firebase_url": "https://iotlet-default-rtdb.firebaseio.com",
+    "project_id": "iotlet",
+    "storage_bucket": "iotlet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297834423356:android:630a0f2489a7b4e4d7cf39",
+        "android_client_info": {
+          "package_name": "com.application.iotlet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297834423356-qg8bc5lfdh5jhelqkea7qncqn6936ldh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaz052jyDG8kzUt9HwZI71rQ5n2inUwL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297834423356-qg8bc5lfdh5jhelqkea7qncqn6936ldh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

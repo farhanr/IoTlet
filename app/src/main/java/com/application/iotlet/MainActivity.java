@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
     TextView textViewSuhu;
     TextView textViewKelembaban;
+    TextView textViewWaterPump;
     SwitchMaterial switchRelay;
 
     boolean relayOn;
@@ -38,11 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
         Intent i= new Intent(this, IotletService.class);
         i.putExtra("KEY1", "Value to be used by the service");
-        startService(i);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            startForegroundService(i);
+        } else {
+            startService(i);
+        }
 
         textViewSuhu = findViewById(R.id.tv_temperature);
         textViewKelembaban = findViewById(R.id.tv_humidity);
+        textViewWaterPump = findViewById(R.id.tv_waterpump);
         switchRelay = findViewById(R.id.switch_relay);
+
 
         database = FirebaseDatabase.getInstance();
         relayRef = database.getReference("relay_on");
@@ -88,10 +96,12 @@ public class MainActivity extends AppCompatActivity {
                 relayOn = snapshot.getValue(Boolean.class);
                 if (relayOn) {
                     switchRelay.setChecked(true);
-                    Toast.makeText(MainActivity.this, "Water pump telah dinyalakan", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Water pump is on", Toast.LENGTH_SHORT).show();
+                    textViewWaterPump.setText("Water Pump: ON");
                 } else {
                     switchRelay.setChecked(false);
-                    Toast.makeText(MainActivity.this, "Water pump telah dimatikan", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Water pump is off", Toast.LENGTH_SHORT).show();
+                    textViewWaterPump.setText("Water Pump: OFF");
                 }
             }
 

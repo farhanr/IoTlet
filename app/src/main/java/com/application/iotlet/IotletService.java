@@ -26,10 +26,11 @@ import com.google.firebase.database.ValueEventListener;
 public class IotletService extends Service {
     FirebaseDatabase database;
     DatabaseReference suhuRef;
-    DatabaseReference kelembabanRef;
+    DatabaseReference relayRef;
+
 
     double suhu;
-    double kelembaban;
+    boolean relayOn;
 
     NotificationChannel notificationChannel;
     NotificationManager manager;
@@ -58,32 +59,40 @@ public class IotletService extends Service {
 
         database = FirebaseDatabase.getInstance();
         suhuRef = database.getReference("suhu");
-        kelembabanRef = database.getReference("kelembaban");
+        relayRef = database.getReference("relay_on");
 
         suhuRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 suhu = snapshot.getValue(Double.class);
-                if(suhu >= 45){
+                if(suhu >= 30) {
+                    if (!relayOn) {
+                        relayRef.setValue(true);
+                        relayOn = true;
+                    }
                     Notification notifTemperatureMax =
                             new Notification.Builder(IotletService.this, "CHANNEL_IOTLET")
-                                    .setContentTitle("Peringatan!")
+                                    .setContentTitle("Peringatan!!!")
                                     .setSmallIcon(R.drawable.iotlet_logo_purple)
                                     .setLargeIcon(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.iotlet_logo_purple), 256, 256, false))
                                     .setStyle(new Notification.BigTextStyle()
-                                            .bigText("Suhu di rumah walet melebihi batas maksimum! "+
-                                                    "Apakah anda ingin mengaktifkan Water Pump?"))
+                                            .bigText("Suhu di Rumah Walet Anda Telah Mencapai 30°C " +
+                                                    "Dan Kelembaban Tidak Mencapai 80%! " +
+                                                    "Water pump telah dinyalakan secara otomatis!"))
                                     .setContentIntent(pendingIntent).build();
                     manager.notify(2, notifTemperatureMax);
-                } else if (suhu > 26) {
+                } else if (suhu < 30 && relayOn) {
+                    relayRef.setValue(false);
+                    relayOn = false;
+                } else if (suhu >= 26) {
                     Notification notifTemperature =
                             new Notification.Builder(IotletService.this, "CHANNEL_IOTLET")
                                     .setContentTitle("Peringatan!")
                                     .setSmallIcon(R.drawable.iotlet_logo_purple)
                                     .setLargeIcon(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.iotlet_logo_purple), 256, 256, false))
                                     .setStyle(new Notification.BigTextStyle()
-                                            .bigText("Suhu di rumah walet telah mencapai "+ suhu +
-                                                    " °C! Apakah anda ingin mengaktifkan Water Pump?"))
+                                            .bigText("Terjadi peningkatan suhu dan penurunan kelembaban di rumah walet anda! "+
+                                                    "Disarankan untuk mengaktifkan water pump!"))
                                     .setContentIntent(pendingIntent).build();
                     manager.notify(2, notifTemperature);
                 }

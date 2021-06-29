@@ -16,7 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+// PENGHUBUNG FIREBASE KE ANDROID STUDIO
 public class MainActivity extends AppCompatActivity {
     TextView textViewSuhu;
     TextView textViewKelembaban;
@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
         switchRelay = findViewById(R.id.switch_relay);
 
 
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance(); // FARIABEL DATABASE
         relayRef = database.getReference("relay_on");
         suhuRef = database.getReference("suhu");
         kelembabanRef = database.getReference("kelembaban");
 
         suhuRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) { // UPDATE NILAI SUHU PADA APLIKASI
                 suhu = snapshot.getValue(Double.class);
                 textViewSuhu.setText(String.format("%.1f", suhu));
             }
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         kelembabanRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) { // UPDATE NILAI KELEMBABAN PADA APLIKASI
                 kelembaban = snapshot.getValue(Double.class);
                 textViewKelembaban.setText(String.format("%.1f", kelembaban));
             }
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         switchRelay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // SWITCH UNTUK RELAY ( TRUE DAN FLASE )
                 relayRef.setValue(isChecked);
             }
         });
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 relayOn = snapshot.getValue(Boolean.class);
+                // KETERANGAN NOTIFIKASI KECIL ON OFF RELAY YANG TERHUBUNG KE FIREBASE ( MEMBUAT NOTIF JIKA VARIABEL RELAY BERNILAI TRUE ATAU FALSE )
                 if (relayOn) {
                     switchRelay.setChecked(true);
                     Toast.makeText(MainActivity.this, "Water pump is on", Toast.LENGTH_SHORT).show();
